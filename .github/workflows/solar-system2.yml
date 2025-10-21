@@ -52,7 +52,7 @@ jobs:
           # unique artifact name per matrix job
           name: test-results-${{ matrix.operating-system }}-node${{ matrix.node-version }}
           # path where test reports will be stored
-          path: testResult
+          path: testResult.xml
 
 
   code-coverage:
@@ -79,4 +79,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage-report
-          path: coverage
+          path: coverage.xml
