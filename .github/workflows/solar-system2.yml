@@ -24,7 +24,7 @@ jobs:
             operating-system: macos-latest
           - node-version: 20
             operating-system: macos-latest
-          - node-version: 16
+          - node-version: 18
             operating-system: macos-latest
 
       fail-fast: false
