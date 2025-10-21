@@ -29,7 +29,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Set up Node.js v${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -52,3 +52,29 @@ jobs:
           name: test-results-${{ matrix.operating-system }}-node${{ matrix.node-version }}
           # path where test reports will be stored
           path: .github/workflows/artifacts/${{ matrix.operating-system }}/node-${{ matrix.node-version }}/
+
+
+  code-coverage:
+    name: Code Coverage Report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run code coverage
+        run: npm run coverage
+
+      - name: Upload code coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: codde-coverage-report.xml
