@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - feature/*
+      - features/*
 
 env:
   MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
@@ -16,19 +16,33 @@ env:
 jobs:
     unit-tests:
         name: Run Unit Tests
-        runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            node-version: [16, 18, 20]
+            operating-system: [ubuntu-latest, macos-latest]
+            exclude:
+              - node-version: 16
+                operating-system: macos-latest
+
+        runs-on: ${{ matrix.operating-system }}
 
         steps:
         - name: Checkout code
           uses: actions/checkout@v3
 
-        - name: Set up Node.js
+        - name: Set up Node.js V ${{ matrix['node-version'] }}
           uses: actions/setup-node@v3
           with:
-            node-version: '16'
+            node-version: ${{ matrix['node-version'] }}
 
         - name: Install dependencies
           run: npm install
 
         - name: Run unit tests
           run: npm test
+
+        - name: Archive Test Results
+          uses: actions/upload-artifact@v4.6.2
+          with:
+            name: test-results
+            path: test-results2.xml
