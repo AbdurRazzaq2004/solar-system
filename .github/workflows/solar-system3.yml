@@ -110,6 +110,9 @@ jobs:
   Docker:
     name: Docker Login and Build & Push Image to Docker Hub and Github Container Registry
     needs: [unit-tests, code-coverage]
+    # Add Permissions For Pushing Image To Github Container Registry , The Default Token Has No Write Access To Packages
+    permissions:
+      packages: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
