@@ -121,9 +121,27 @@ jobs:
           username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # - name: Build and push Docker image
-      #   uses: docker/build-push-action@v4
-      #   with:
-      #     context: .
-      #     push: true
-      #     tags: ${{ vars.DOCKER_USERNAME }}/solar-system:latest
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: false
+          tags: ${{ vars.DOCKER_USERNAME }}/solar-system:${{ github.sha }}
+
+      - name: Docker Image testing
+        run: |
+            docker images
+            docker run --name solar-system-app -d \
+            -p 3000:3000 \
+            -e MONGO_URI=${{ env.MONGO_URI }} \
+            -e MONGO_USERNAME=${{ env.MONGO_USERNAME }} \
+            -e MONGO_PASSWORD=${{ env.MONGO_PASSWORD }} \
+            ${{ vars.DOCKER_USERNAME }}/solar-system:${{ github.sha }}
+
+            export IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-app)
+            echo "Container IP Address: $IP"
+
+            echo Testing Image URL http://$IP:3000/live using wget
+            wget -q -O - 127.0.0.1:3000/live | grep "live"
+      # as the image will be running inside docker, we need to access it via localhost
+            
