@@ -121,7 +121,7 @@ jobs:
           username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build and Test Docker Image
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -144,4 +144,10 @@ jobs:
             echo Testing Image URL http://$IP:3000/live using wget
             wget -q -O - 127.0.0.1:3000/live | grep "live"
       # as the image will be running inside docker, we need to access it via localhost
-            
+      
+      - name: Docker Image Push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/solar-system:${{ github.sha }}
