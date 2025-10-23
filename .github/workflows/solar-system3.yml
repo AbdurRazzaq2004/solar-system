@@ -121,6 +121,15 @@ jobs:
           username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Log in to Github Container Registry
+      # by default --> this action (docker/login-action@v2) pushes to Docker Hub
+      # to push to GHCR, we need to specify the registry explicitly
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }} #Github Token is Automatically created by Github in Secrets
+
       - name: Build and Test Docker Image
         uses: docker/build-push-action@v4
         with:
@@ -145,9 +154,11 @@ jobs:
             wget -q -O - 127.0.0.1:3000/live | grep "live"
       # as the image will be running inside docker, we need to access it via localhost
       
-      - name: Docker Image Push
+      - name: Docker Image Push To Docker Hub and Github Container Registry
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: ${{ vars.DOCKER_USERNAME }}/solar-system:${{ github.sha }}
+          tags: | 
+            ${{ vars.DOCKER_USERNAME }}/solar-system:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
