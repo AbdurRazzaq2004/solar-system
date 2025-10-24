@@ -13,6 +13,8 @@ env:
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
 
 jobs:
+
+  # JOB 1: Unit Tests on Multiple Node.js Versions and OS
   unit-tests:
     name: Run Unit Tests
     strategy:
@@ -64,7 +66,7 @@ jobs:
           if-no-files-found: warn
 
 
-
+# job 2: Code Coverage Report
   code-coverage:
     name: Code Coverage Report
     runs-on: ubuntu-latest
@@ -106,7 +108,7 @@ jobs:
           if-no-files-found: warn
 
           
-
+# Job3 : Docker Login and Build & Push Image to Docker Hub and Github Container Registry
   Docker:
     name: Docker Login and Build & Push Image to Docker Hub and Github Container Registry
     needs: [unit-tests, code-coverage]
