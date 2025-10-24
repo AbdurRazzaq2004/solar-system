@@ -201,5 +201,6 @@ jobs:
          kubectl get pods --all-namespaces
          echo -------------------------------------------------------
          kubectl get svc --all-namespaces
+         
     
 
