@@ -186,7 +186,7 @@ jobs:
         uses: azure/k8s-set-context@v3
         with:
           method: kubeconfig
-          # set KUBE_CONFIG_DEV secret in your repo settings !!
+          # set KUBE_CONFIG_DEV secret in your repo settings !!!
           kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Set up Kubeconfig
